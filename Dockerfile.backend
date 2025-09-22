@@ -1,27 +1,24 @@
-# Stage 1: Build with Maven and Java 21
-FROM maven:3.9.6-eclipse-temurin-21 AS build
+# Stage 1: Build with Maven and JDK
+FROM maven:3.9.6-eclipse-temurin-17 AS build
 
 WORKDIR /app
 
-# Install git to allow repo cloning
+# Install git
 RUN apt-get update && apt-get install -y git
 
-# Clone your backend repo
+# Clone backend repo
 RUN git clone https://github.com/premkotha10/cicd_project_backend.git .
 
-# Build the JAR (skipping tests for faster build)
+# Build Spring Boot JAR
 RUN mvn clean package -DskipTests
 
 # Stage 2: Run the JAR
-FROM eclipse-temurin:21-jdk
+FROM eclipse-temurin:17-jdk
 
 WORKDIR /app
 
-# Copy the JAR file from the build stage
 COPY --from=build /app/target/*.jar app.jar
 
-# Expose backend port (changed from 8080 → 8081)
 EXPOSE 8081
 
-# Run the Spring Boot JAR on port 8081
-ENTRYPOINT ["java", "-jar", "app.jar", "--server.port=8081"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
