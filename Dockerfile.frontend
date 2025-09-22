@@ -14,5 +14,5 @@ FROM nginx:alpine
 WORKDIR /usr/share/nginx/html
 
 COPY --from=build /app/dist .   # Adjust if build folder is "build" instead of "dist"
-EXPOSE 8080
+EXPOSE 8082
 
