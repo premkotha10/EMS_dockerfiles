@@ -1,20 +1,18 @@
-# Step 1: Build stage (Node.js for React/Vite)
-FROM node:18 AS build-stage
+FROM node:18-alpine as build
+
 WORKDIR /app
 
-# Install git to allow repo cloning
-RUN apt-get update && apt-get install -y git
-
-# Clone your frontend repo
-RUN git clone https://github.com/premkotha10/cicd_project_frontend.git .
+# Clone frontend repo
+RUN apk add --no-cache git && \
+    git clone https://github.com/premkotha10/cicd_project_frontend.git .
 
 # Install dependencies and build
-RUN npm install
-RUN npm run build
+RUN npm install && npm run build
 
-# Step 2: Runtime stage (nginx for serving static files)
+# Serve frontend with Nginx
 FROM nginx:alpine
-COPY --from=build-stage /app/dist /usr/share/nginx/html
+WORKDIR /usr/share/nginx/html
 
-EXPOSE 8082
-CMD ["nginx", "-g", "daemon off;"]
+COPY --from=build /app/dist .   # Adjust if build folder is "build" instead of "dist"
+EXPOSE 8080
+
