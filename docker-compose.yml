@@ -7,7 +7,7 @@ services:
     restart: always
     environment:
       MYSQL_DATABASE: eventdb
-      MYSQL_ROOT_PASSWORD:root
+      MYSQL_ROOT_PASSWORD: root
     ports:
       - "3307:3306"
     volumes:
@@ -15,7 +15,7 @@ services:
     networks:
       - ecommerce-net
     healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", "-uroot", "-p1357"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -27,9 +27,9 @@ services:
     container_name: ecommerce-backend1
     restart: always
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/ecommerce
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/eventdb
       SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: 1357
+      SPRING_DATASOURCE_PASSWORD: root
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
     depends_on:
       db:
