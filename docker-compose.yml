@@ -1,17 +1,16 @@
-
-
+version: '3.8'
 services:
   db:
     image: mysql:8.0
     container_name: my-mysql
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: myRootPass123   # correct way to set root password
-      MYSQL_DATABASE: mydb                 # optional: a database to create
-      MYSQL_USER: normaluser               # optional: normal user
-      MYSQL_PASSWORD: normalpass           # optional: password for normal user
+      MYSQL_ROOT_PASSWORD: myRootPass123   # correct root password
+      MYSQL_DATABASE: eventdb              # database your Spring Boot app uses
+      MYSQL_USER: normaluser               # optional user
+      MYSQL_PASSWORD: normalpass           # optional user password
     ports:
-      - "3307:3306"
+      - "3307:3306"                        # for accessing MySQL from host
     networks:
       - ems-net
 
@@ -25,9 +24,9 @@ services:
     depends_on:
       - db
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/eventdb
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/eventdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_DATASOURCE_PASSWORD: myRootPass123
     networks:
       - ems-net
 
@@ -46,3 +45,4 @@ services:
 networks:
   ems-net:
     driver: bridge
+
